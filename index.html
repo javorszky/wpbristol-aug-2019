@@ -48,11 +48,11 @@
 				</section>
 
 				<section>
-					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Amazing, 7 Eleven launch mobile payment app: a day after launching it attackers stole half a million USD from customers, as the app had no security around password reset (any user could reset anybody else’s password) <a href="https://t.co/EyBrcFYMlL">https://t.co/EyBrcFYMlL</a></p>&mdash; Kevin Beaumont (@GossiTheDog) <a href="https://twitter.com/GossiTheDog/status/1146885884928843776">July 4, 2019</a></blockquote>
+					<blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr">Amazing, 7 Eleven launch mobile payment app: a day after launching it attackers stole half a million USD from customers, as the app had no security around password reset (any user could reset anybody else’s password) <a href="https://t.co/EyBrcFYMlL">https://t.co/EyBrcFYMlL</a></p>&mdash; Kevin Beaumont (@GossiTheDog) <a href="https://twitter.com/GossiTheDog/status/1146885884928843776">July 4, 2019</a></blockquote>
 				</section>
 
 				<section>
-					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Not exactly. Code releases go through a CI process and geographic/customer segment tiered rollout. On the other hand, WAF Rules are generally more like a configuration language. We push them out to respond to new attack threats. Customers expect them to be live globally quickly.</p>&mdash; Matthew Prince 🌥 (@eastdakota) <a href="https://twitter.com/eastdakota/status/1146983051492093953">July 5, 2019</a></blockquote>
+					<blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr">Not exactly. Code releases go through a CI process and geographic/customer segment tiered rollout. On the other hand, WAF Rules are generally more like a configuration language. We push them out to respond to new attack threats. Customers expect them to be live globally quickly.</p>&mdash; Matthew Prince 🌥 (@eastdakota) <a href="https://twitter.com/eastdakota/status/1146983051492093953">July 5, 2019</a></blockquote>
 				</section>
 
 				<section>
@@ -68,22 +68,186 @@
 				</section>
 
 				<section>
-					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">A QA engineer walks into a bar. Orders a beer. Orders 0 beers. Orders 99999999999 beers. Orders a lizard. Orders -1 beers. Orders a ueicbksjdhd. <br><br>First real customer walks in and asks where the bathroom is. The bar bursts into flames, killing everyone.</p>&mdash; Brenan Keller (@brenankeller) <a href="https://twitter.com/brenankeller/status/1068615953989087232">November 30, 2018</a></blockquote>
+					<blockquote class="twitter-tweet" data-dnt="true"><p lang="en" dir="ltr">A QA engineer walks into a bar. Orders a beer. Orders 0 beers. Orders 99999999999 beers. Orders a lizard. Orders -1 beers. Orders a ueicbksjdhd. <br><br>First real customer walks in and asks where the bathroom is. The bar bursts into flames, killing everyone.</p>&mdash; Brenan Keller (@brenankeller) <a href="https://twitter.com/brenankeller/status/1068615953989087232">November 30, 2018</a></blockquote>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Had to have this explained to me by programmer friend <a href="https://t.co/bUhCUBqxJM">pic.twitter.com/bUhCUBqxJM</a></p>&mdash; John Rentoul (@JohnRentoul) <a href="https://twitter.com/JohnRentoul/status/1069237472016642054?ref_src=twsrc%5Etfw">December 2, 2018</a></blockquote>
 				</section>
 
 				<section>
 					<h1>Common point</h1>
 					<p>All of these situations arose because software was made to do something that the humans writing it had not considered.</p>
 				</section>
+
+				<section>
+					<h1>Motivation</h1>
+					<p>Undergone PCI compliance training for client.</p>
+					<p>Had conversations where unknowns were present.</p>
+					<p>Regular Tuesday when I deal with an API that just goes away.</p>
+				</section>
+
+				<section>
+					<h1>So where do these come from?</h1>
+				</section>
+
+				<section>
+					<h1>Hooks and Filters</h1>
+					<p>It's what makes WordPress extensible.</p>
+					<p>Also what makes WordPress very easy to break.</p>
+				</section>
+
+				<section>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+$classname = apply_filters(
+	'woocommerce_order_class',
+	$classname,
+	$order_type,
+	$order_id
+);
+
+return new $classname( $order_id );
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+add_filter( 'woocommerce_order_class', function() {
+	return 'NoSuchClass';
+} );
+					</code></pre>
+					<p>=</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">Warning: Uncaught Error: Class 'FooClNoSuchClassass' not found in ...</code></pre>
+					<p class="fragment">rip</p>
+				</section>
+
+				<section data-transition="slide-in none-out">
+					<pre><code class="php " data-trim data-noescape data-line-numbers="3-6" style="max-height:600px;">
+$classname = apply_filters( 'woocommerce_order_class', $classname, $order_type, $order_id );
+
+if ( ! class_exists( $classname ) ) {
+	return false;
+}
+
+return new $classname( $order_id );
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+add_filter( 'woocommerce_order_class', function() {
+	return 'NoSuchClass';
+} );
+					</code></pre>
+					<p>=</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+// false is returned
+					</code></pre>
+					<p class="fragment">👍</p>
+				</section>
+
+				<section data-transition="none">
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+$classname = apply_filters( 'woocommerce_order_class', $classname, $order_type, $order_id );
+
+if ( ! class_exists( $classname ) ) {
+	return false;
+}
+
+return new $classname( $order_id );
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers="2" style="max-height:600px;">
+add_filter( 'woocommerce_order_class', function() {
+	return 'ClassWillThrowExceptionOnInit';
+} );
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+class ClassWillThrowExceptionOnInit {
+	public function __construct() {
+		throw new Exception( 'No instance for you' );
+	}
+}
+					</code></pre>
+				</section>
+
+				<section data-transition="none">
+					<pre><code class="php " data-trim data-noescape data-line-numbers="7,9-12" style="max-height:600px;">
+$classname = apply_filters( 'woocommerce_order_class', $classname, $order_type, $order_id );
+
+if ( ! class_exists( $classname ) ) {
+	return false;
+}
+
+try {
+	return new $classname( $order_id );
+} catch ( Exception $e ) {
+	wc_caught_exception( $e, __FUNCTION__, func_get_args() );
+	return false;
+}
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+add_filter( 'woocommerce_order_class', function() {
+	return 'ClassWillThrowExceptionOnInit';
+} );
+
+class ClassWillThrowExceptionOnInit {
+	public function __construct() {
+		throw new Exception( 'No instance for you' );
+	}
+}
+					</code></pre>
+				</section>
+
+				<section data-transition="none">
+					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
+$classname = apply_filters( 'woocommerce_order_class', $classname, $order_type, $order_id );
+
+if ( ! class_exists( $classname ) ) {
+	return false;
+}
+
+try {
+	return new $classname( $order_id );
+} catch ( Exception $e ) {
+	wc_caught_exception( $e, __FUNCTION__, func_get_args() );
+	return false;
+}
+					</code></pre>
+					<p>+</p>
+					<pre><code class="php " data-trim data-noescape data-line-numbers="2" style="max-height:600px;">
+add_filter( 'woocommerce_order_class', function() {
+	return [ 2 ];
+} );
+					</code></pre>
+					<p class="fragment">But why would anyone DO THAT?!</p>
+				</section>
+
+				<section>
+					<h1>Why would anyone do that?</h1>
+					<h2 class="fragment">It doesn't matter.</h2>
+					<p class="fragment">Can you PROVE that that won't happen? Nope. So handle it.</p>
+				</section>
+
+				<section>
+					<h1>Practical limits to handling fail paths</h1>
+					<p>Lack of time</p>
+					<p>Lack of management buy-in</p>
+					<p>And...</p>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Yeah people who are mocking CO&#39;s security people are being meanie poo heads. 99% of the time there&#39;s a glaring sec flaw there&#39;s an email from an exasperated engineer saying &quot;THIS IS ALL BAD&quot; and someone replying &quot;we accept the risk&quot;</p>&mdash; The Cyber (@r0wdy_) <a href="https://twitter.com/r0wdy_/status/1156344772623138816?ref_src=twsrc%5Etfw">July 30, 2019</a></blockquote>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Exactly that. Many good orgs carry a metric ton of risks because the organisation has chosen to accept them, I don’t think people realise<br><br>People should never take my tweets as laughing at InfoSec teams btw, as I’m in the trenches doing same thing. It’s a good learning moment tho</p>&mdash; Kevin Beaumont (@GossiTheDog) <a href="https://twitter.com/GossiTheDog/status/1156347507800236033?ref_src=twsrc%5Etfw">July 30, 2019</a></blockquote>
+				</section>
+
 			</div>
 		</div>
 
 		<script src="js/reveal.js"></script>
 
 		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
 				width: 1280,
 				height: 720,
@@ -96,7 +260,6 @@
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true }
 				]
 			});
