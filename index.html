@@ -98,6 +98,50 @@
 				</section>
 
 				<section>
+					<h1>User input</h1>
+					<p>Every single <code>esc_*</code> function in WordPress is there because of this.</p>
+					<p>Additioanally <code>wp_kses_*</code> and the PHP native <code>strip_tags()</code> functoins.</p>
+				</section>
+
+				<section>
+					<h1>External services</h1>
+					<p>Let's handle payment with a card through an API (Stripe for example)</p>
+					<ul>
+						<li>Payment successful</li>
+						<li class="fragment">Payment declined (insufficient funds)</li>
+						<li class="fragment">Payment declined (wrong CVV)</li>
+						<li class="fragment">Payment declined (fraud risk)</li>
+						<li class="fragment">Payment declined (card type not accepted)</li>
+						<li class="fragment">Pre-authorization taken</li>
+						<li class="fragment">API is just not there</li>
+						<li class="fragment">... wait WHAT</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>External services 2</h1>
+					<h2>The return of the external services</h2>
+					<p>You post some data, and you get some data back, for example an autocomplete service.</p>
+					<p>What happens if that service starts returning poisoned payloads?</p>
+					<p><a href="https://www.wordfence.com/blog/2019/03/recent-social-warfare-vulnerability-allowed-remote-code-execution/">Social Warfare plugin RCE</a></p>
+				</section>
+
+				<section>
+					<h1>PCI: data coming in <strong>MUST</strong> be sanitized</h1>
+					<p>But also it's just a good practice anyways. <strong>Suggestions:</strong></p>
+					<ol>
+						<li>Validate against some template for expected data, chop everything else that's not supposed to be there.</li>
+						<li><strong>Equally important: </strong>make sure that what's expected to be there IS actually there.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h1>Example code from WooCommerce</h1>
+					<p>Removed bits first.</p>
+				</section>
+
+				<section>
+					<p><code>WC_Order_Factory::get_order( $order_id );</code></p>
 					<pre><code class="php " data-trim data-noescape data-line-numbers style="max-height:600px;">
 $classname = apply_filters(
 	'woocommerce_order_class',
@@ -235,11 +279,27 @@ add_filter( 'woocommerce_order_class', function() {
 				</section>
 
 				<section>
+					<h1>(CapitalOne)</h1>
 					<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Yeah people who are mocking CO&#39;s security people are being meanie poo heads. 99% of the time there&#39;s a glaring sec flaw there&#39;s an email from an exasperated engineer saying &quot;THIS IS ALL BAD&quot; and someone replying &quot;we accept the risk&quot;</p>&mdash; The Cyber (@r0wdy_) <a href="https://twitter.com/r0wdy_/status/1156344772623138816?ref_src=twsrc%5Etfw">July 30, 2019</a></blockquote>
 				</section>
 
 				<section>
 					<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true"><p lang="en" dir="ltr">Exactly that. Many good orgs carry a metric ton of risks because the organisation has chosen to accept them, I don’t think people realise<br><br>People should never take my tweets as laughing at InfoSec teams btw, as I’m in the trenches doing same thing. It’s a good learning moment tho</p>&mdash; Kevin Beaumont (@GossiTheDog) <a href="https://twitter.com/GossiTheDog/status/1156347507800236033?ref_src=twsrc%5Etfw">July 30, 2019</a></blockquote>
+				</section>
+
+				<section>
+					<h1>When do you not care?</h1>
+					<ul>
+						<li>you're totally fine it failing. Or when you WANT it to fail, on purpose.</li>
+						<li>effort exceeds benefit.</li>
+						<li>you accept the risk, and are totally fine rather cleaning up data corruption than preventing data corruption because it's known, and easier to fix than prevent.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>The end</h1>
+					<h2>Questions?</h2>
+					<p><a href="https://twitter.com/javorszky">@javorszky</a></p>
 				</section>
 
 			</div>
