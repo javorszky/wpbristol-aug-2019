@@ -21,12 +21,60 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+		<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		<style>
+			.twitter-tweet {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Defensive Coding</h1>
+					<h2>What is it, why you need it, and how to start?</h2>
+					<p>Gabor Javorszky - <a href="https://twitter.com/javorszky">@javorszky</a> - 6th August 2019</p>
+					<p>Slides: <a href="https://wpbristol.j7y.co">wpbristol.j7y.co</a></p>
+				</section>
+
+				<section>
+					<h1>Happy Path</h1>
+					<blockquote cite="https://en.wikipedia.org/wiki/Happy_path">
+						<p>In the context of software or information modeling, a happy path is a default scenario featuring no exceptional or error conditions.</p>
+						<footer><cite><a href="https://en.wikipedia.org/wiki/Happy_path">https://en.wikipedia.org/wiki/Happy_path</a></cite></footer>
+					</blockquote>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Amazing, 7 Eleven launch mobile payment app: a day after launching it attackers stole half a million USD from customers, as the app had no security around password reset (any user could reset anybody else’s password) <a href="https://t.co/EyBrcFYMlL">https://t.co/EyBrcFYMlL</a></p>&mdash; Kevin Beaumont (@GossiTheDog) <a href="https://twitter.com/GossiTheDog/status/1146885884928843776">July 4, 2019</a></blockquote>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Not exactly. Code releases go through a CI process and geographic/customer segment tiered rollout. On the other hand, WAF Rules are generally more like a configuration language. We push them out to respond to new attack threats. Customers expect them to be live globally quickly.</p>&mdash; Matthew Prince 🌥 (@eastdakota) <a href="https://twitter.com/eastdakota/status/1146983051492093953">July 5, 2019</a></blockquote>
+				</section>
+
+				<section>
+					<h1>Cloudflare regex writeup</h1>
+					<p><a href="https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/">https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/</a></p>
+					<p>It’s long, full of technical details, and just amazing at its complexity.</p>
+				</section>
+
+				<section>
+					<h1>Shifty email bug</h1>
+					<p>One morning ~3700 emails went out that shouldn’t have gone out.</p>
+					<p><a href="https://jasonmccreary.me/articles/shifty-email-bug/">https://jasonmccreary.me/articles/shifty-email-bug/</a></p>
+				</section>
+
+				<section>
+					<blockquote class="twitter-tweet"><p lang="en" dir="ltr">A QA engineer walks into a bar. Orders a beer. Orders 0 beers. Orders 99999999999 beers. Orders a lizard. Orders -1 beers. Orders a ueicbksjdhd. <br><br>First real customer walks in and asks where the bathroom is. The bar bursts into flames, killing everyone.</p>&mdash; Brenan Keller (@brenankeller) <a href="https://twitter.com/brenankeller/status/1068615953989087232">November 30, 2018</a></blockquote>
+				</section>
+
+				<section>
+					<h1>Common point</h1>
+					<p>All of these situations arose because software was made to do something that the humans writing it had not considered.</p>
+				</section>
 			</div>
 		</div>
 
@@ -39,10 +87,12 @@
 			Reveal.initialize({
 				width: 1280,
 				height: 720,
-
-				// Factor of the display size that should remain empty around the content
 				margin: 0.07,
-
+				hashOneBasedIndex: true,
+				hash: true,
+				slideNumber: true,
+				fragmentInURL: true,
+				postMessage: false,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
